@@ -1,17 +1,10 @@
 "use client";
-
 import { useState } from "react";
-
 export default function InputMirror() {
-    // BUG: Shared State / Input Mirroring
-    // Both inputs share the same state variable 'value'.
-    // User thinks they are separate because they are labeled differently.
     const [value, setValue] = useState("");
-
     return (
         <div className="p-6 bg-zinc-800 rounded-lg border border-zinc-700 mt-8">
             <h3 className="text-xl font-bold mb-4 text-purple-400">Secure Search</h3>
-
             <div className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-400 mb-1">Search Keywords</label>
@@ -23,7 +16,6 @@ export default function InputMirror() {
                         placeholder="Search..."
                     />
                 </div>
-
                 <div>
                     <label className="block text-sm font-medium text-gray-400 mb-1">Confirm Password (for verification)</label>
                     <input

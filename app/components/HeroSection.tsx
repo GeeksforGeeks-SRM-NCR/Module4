@@ -1,20 +1,12 @@
 "use client";
-
 import { motion } from "framer-motion";
-
 export default function HeroSection() {
-    // BUG: Hydration Mismatch
-    // renderTime is calculated during render.
-    // Server will have one time, Client will have another (even if slightly different).
-    // Next.js will throw a warning: "Text content does not match server-rendered HTML".
     const renderTime = new Date().toLocaleTimeString();
-
     return (
         <section className="h-screen w-full flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-indigo-900 to-black text-white">
             <div className="absolute inset-0 z-0 opacity-20">
                 <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center" />
             </div>
-
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -27,19 +19,13 @@ export default function HeroSection() {
                 <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
                     Experience the future of broken web development.
                 </p>
-
                 <div className="p-4 border border-white/10 rounded-lg bg-black/30 backdrop-blur-md">
                     <p className="text-sm font-mono text-gray-400">System Time Check:</p>
                     <p className="text-2xl font-mono text-green-400 font-bold">
                         {renderTime}
                     </p>
-                    {/* 
-             Fix Hint: Use useEffect to set time on client only, 
-             or suppressHydrationWarning (not recommended for dynamic data).
-          */}
                 </div>
             </motion.div>
-
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

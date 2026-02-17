@@ -1,11 +1,7 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-
 const CATEGORIES = ["All", "Nature", "Tech", "Architecture", "People"];
-
-// Mock Data Generator
 const generateImages = (category: string, page: number) => {
     return Array.from({ length: 9 }).map((_, i) => ({
         id: `${category}-${page}-${i}-${Date.now()}`,
@@ -13,27 +9,16 @@ const generateImages = (category: string, page: number) => {
         title: `${category} Image ${page * 9 + i + 1}`,
     }));
 };
-
 export default function GallerySection() {
     const [filter, setFilter] = useState("All");
     const [images, setImages] = useState<any[]>([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
-
-    // BUG 1: Race Condition
-    // If user clicks filters rapidly, old requests might resolve *after* new ones.
-    // We are not using AbortController or a tracking ref.
     const fetchImages = async (selectedCategory: string, selectedPage: number, reset = false) => {
         setLoading(true);
-
-        // Simulate network delay (random between 500ms and 2500ms)
         const delay = Math.floor(Math.random() * 2000) + 500;
-
-        // Using a promise to verify the delay
         await new Promise(resolve => setTimeout(resolve, delay));
-
         const newImages = generateImages(selectedCategory, selectedPage);
-
         if (reset) {
             setImages(newImages);
         } else {
@@ -41,15 +26,10 @@ export default function GallerySection() {
         }
         setLoading(false);
     };
-
-    // Effect to handle filter changes
     useEffect(() => {
         setPage(1);
         fetchImages(filter, 1, true);
-        // Missing Cleanup/Cancellation logic here!
     }, [filter]);
-
-    // BUG 2: Memory Leak (Run-away Event Listeners)
     useEffect(() => {
         const handleScroll = () => {
             if (
@@ -64,23 +44,11 @@ export default function GallerySection() {
                 });
             }
         };
-
         window.addEventListener("scroll", handleScroll);
-
-        // CRITICAL BUG: No cleanup function!
-        // return () => window.removeEventListener("scroll", handleScroll);
-
-        // Every time 'loading' or 'filter' changes (if we include them in deps), 
-        // or if the component re-mounts, we add ANOTHER listener.
-        // Since 'loading' changes often, this might explode if we added it to deps.
-        // Currently deps are [], so it only adds once per mount. 
-        // BUT if the user navigates away and back (if we had routing), it would leak.
-    }, []); // Only runs on mount, so leak is subtle (SPA navigation).
-
+    }, []);
     return (
         <section className="min-h-screen py-20 px-4 bg-zinc-900">
             <h2 className="text-4xl font-bold text-center mb-10 text-white">Infinite Confusion Gallery</h2>
-
             <div className="flex justify-center gap-4 mb-10 flex-wrap">
                 {CATEGORIES.map(cat => (
                     <button
@@ -95,7 +63,6 @@ export default function GallerySection() {
                     </button>
                 ))}
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
                 {images.map((img) => (
                     <motion.div
@@ -115,7 +82,6 @@ export default function GallerySection() {
                     </motion.div>
                 ))}
             </div>
-
             {loading && (
                 <div className="text-center py-10">
                     <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto" />

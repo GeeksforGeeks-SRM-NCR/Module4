@@ -1,31 +1,25 @@
 @import "tailwindcss";
-
 @theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
-
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
-
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
-  overscroll-behavior-y: none; /* Prevent rubber-banding */
+  overscroll-behavior-y: none;
 }
-
-/* Custom Scrollbar Hide */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
@@ -33,8 +27,6 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
-
-/* Smooth Scroll Behavior */
 html {
   scroll-behavior: smooth;
 }

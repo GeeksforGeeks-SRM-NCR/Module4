@@ -1,43 +1,22 @@
 "use client";
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-// This is a dummy "Feature" component loaded dynamically-ish.
-// In a real scenario, this might be imported via next/dynamic.
-
 export default function FeatureModal({
-    // BUG: Boundary Issue.
-    // Ideally, we shouldn't pass non-serializable data from Server to Client.
-    // But since this is a Client component imported into a Server Page (page.tsx),
-    // if page.tsx passes a function or Class instance, it will fail/warn.
-    // We'll simulate the "Broken Feature" by having logic that *expects* a prop 
-    // that implies a server action or complex object, but we mishandle it.
-
-    // Actually, let's stick to a local logic bug regarding "Dynamic Imports".
-    // Let's pretend this component tries to lazy load a heavy library but fails.
 }: {}) {
     const [isOpen, setIsOpen] = useState(false);
     const [content, setContent] = useState<string | null>(null);
-
     const loadFeature = async () => {
         try {
-            // BUG: Broken Dynamic Import Logic
-            // We try to import a module that doesn't exist or we handle the promise wrong.
             setIsOpen(true);
             setContent("Loading...");
-
-            // Simulate import
             await new Promise((_, reject) => setTimeout(() => {
                 reject(new Error("Module './SuperSecretFeature' not found."));
             }, 1000));
-
-            setContent("Feature Loaded!"); // Won't reach here
+            setContent("Feature Loaded!");
         } catch (e) {
             setContent(`Error loading feature: ${(e as Error).message}`);
         }
     };
-
     return (
         <>
             <button
@@ -46,7 +25,6 @@ export default function FeatureModal({
             >
                 Unlock Special Feature
             </button>
-
             <AnimatePresence>
                 {isOpen && (
                     <motion.div

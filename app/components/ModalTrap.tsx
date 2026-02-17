@@ -1,37 +1,19 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-
 export default function ModalTrap() {
     const [isOpen, setIsOpen] = useState(false);
-
-    // BUG: Scroll Lock Fail
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = "hidden";
         }
-
-        // BUG: Missing cleanup function OR conditional cleanup failure.
-        // Ideally: return () => { document.body.style.overflow = 'unset'; }
-        // Reality: We assume the user will click "Close" which sets isOpen to false,
-        // and we put cleanup logic in the 'else' block? 
-        // BUT what if component unmounts while open? (Navigation)
-        // Then body stays locked FOREVER until refresh.
-
         return () => {
-            // Even if we have cleanup, let's say we set it to 'scroll' 
-            // which might break other modals that want it 'hidden'.
-            // For this bug, let's just OMIT the clean up on unmount used by navigation.
         };
     }, [isOpen]);
-
     const close = () => {
-        // Manual cleanup works... mostly.
         document.body.style.overflow = "unset";
         setIsOpen(false);
     };
-
     return (
         <>
             <button
@@ -40,7 +22,6 @@ export default function ModalTrap() {
             >
                 Open Trap Modal
             </button>
-
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
                     <div className="bg-zinc-900 p-6 rounded-lg max-w-sm w-full relative border border-indigo-500">

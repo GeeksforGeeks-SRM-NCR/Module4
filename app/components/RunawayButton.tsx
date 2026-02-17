@@ -1,19 +1,14 @@
 "use client";
-
 import { useState } from "react";
-
 export default function RunawayButton() {
     const [position, setPosition] = useState({ top: "50%", left: "50%" });
     const [hoverCount, setHoverCount] = useState(0);
-
-    // BUG: Runaway Button
     const handleHover = () => {
         const randomTop = Math.floor(Math.random() * 80) + 10;
         const randomLeft = Math.floor(Math.random() * 80) + 10;
         setPosition({ top: `${randomTop}%`, left: `${randomLeft}%` });
         setHoverCount(c => c + 1);
     };
-
     return (
         <div className="relative h-64 w-full border border-dashed border-gray-600 rounded-lg overflow-hidden bg-gray-900/50 mt-8">
             <div className="absolute top-2 left-2 text-xs text-gray-400">
